@@ -10,10 +10,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.hw_menu.R.string.*
 import com.example.hw_menu.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -29,28 +31,15 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-    private fun settext(menuItem: MenuItem){
-        if (isLogin){
-            menuItem.setTitle(R.string.logout)
-        }else{
-            menuItem.setTitle(R.string.login)
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean{
+        Toast.makeText(applicationContext, "called onCreateOptionsMenu", Toast.LENGTH_SHORT).show()
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_layout, menu)
-
-        val loginButton = menu?.findItem(R.id.loginmenu)
-        if (loginButton != null) {
-            settext(loginButton)
-        }
-
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Toast.makeText(applicationContext, "called onOptionsItemSelected", Toast.LENGTH_SHORT).show()
         if (item.itemId == R.id.contactmenu){
             val intent = Intent(this, contactus::class.java)
             this.startActivity(intent)
@@ -59,18 +48,28 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, setting::class.java)
             this.startActivity(intent)
             return true
-        }else if (item.title == "Log Out"){
-            if(item.title == "login"){
-                item.title = "logout"
-            }else if(item.title == "logout"){
-                item.title = "login"
-            }
-            return true
-        } else{
+        } else {
             return super.onOptionsItemSelected(item)
         }
         }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        var menuItem: MenuItem = menu!!.findItem(R.id.loginmenu)
+        var menuItem2: MenuItem = menu!!.findItem(R.id.logoutmenu)
+
+        if(isLogin){
+            menuItem.setVisible(false)
+            isLogin = false
+            menuItem.setVisible(false)
+            menuItem2.setVisible(true)
+           //menuItem.isVisible = getString(R.string.logout)
+        }else{
+            isLogin = true
+            menuItem2.setVisible(false)
+            menuItem.setVisible(true)
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
